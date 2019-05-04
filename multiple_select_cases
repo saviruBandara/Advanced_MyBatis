@@ -1,0 +1,22 @@
+	@Select("select " + 
+			"distinct recdet.accountuuid as rf1,	" + 
+			"recdet.amount as rf2,	" +
+			"(case when (gl.GLcode IS NOT NULL) then gl.GLcode "+
+				 "when (gl1.agentcode IS NOT NULL) then gl1.agentcode "+
+			     "when (gl2.code IS NOT NULL) then gl2.code "+
+			     "when (gl3.GLcode IS NOT NULL) then gl3.GLcode "+
+				"end) as rf3,"+
+			"(case when (gl.description IS NOT NULL) then gl.description "+
+				  "when (gl1.agentname IS NOT NULL) then gl1.agentname "+
+			      "when (gl2.description IS NOT NULL) then gl2.description "+
+			      "when (gl3.owner_name IS NOT NULL) then gl3.owner_name "+
+			      "else null "+
+				"end) as rf4 "+
+			"from " + 
+			"jwt.receiptcredit as recdet	" + 
+			"left join jwt.transaction_glcode_master as gl on gl.uuid=recdet.accountuuid " + 
+			"left join jwt.agents as gl1 on gl1.idagent=recdet.accountuuid " + 
+			"left join jwt.activitysuppliermaster as gl2 on gl2.uuid=recdet.accountuuid " + 
+			"left join jwt.vehicle_owner_master as gl3 on gl3.uuid=recdet.accountuuid " + 
+			"where recdet.idReciptData=#{p1};")
+	List<CommonReportModel> getReciptCreditData(@Param("p1") String p1);
