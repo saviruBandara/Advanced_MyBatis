@@ -1,0 +1,12 @@
+/*get getGLAccounts*/
+	@Select({"<script>SELECT " + 
+			"a.uuid as rf1, " + 
+			"b.type as rf2, " + 
+			"a.GLcode as rf3, " + 
+			"a.description as rf4 " + 
+			"from jwt.transaction_glcode_master a " + 
+			"left join jwt.transaction_gltype_master b on a.GLTypeId = b.uuid "+
+			"where <if test='p1!=\"null\"'>a.GLcode LIKE CONCAT('%',#{p1},'%') and</if> "+
+			"a.status=1 and a.GLcode!='' "+
+			"group by a.GLcode;</script>"})
+	List<CommonReportModelSmall> getGLAccounts(@Param("p1") String p1);
